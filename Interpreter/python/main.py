@@ -1,7 +1,6 @@
 import re
-
-word: str = "azz"
-IgnoreSpaces: bool = False
+from prosses import *
+from globalvars import *
 
 def words_inSentence(text, word) -> int :
     global IgnoreSpaces
@@ -20,11 +19,14 @@ def words_inSentence(text, word) -> int :
 def read_file(filename, word):
     try:
         with open(filename, 'r') as file:
+            line_num: int = 0
             Text = file.read()
             Lines = Text.split('\n')
             for line in Lines:
-                print(line)
+                line_num += 1
                 words = words_inSentence(line, word)
+                prosses_line(words, line_num, line) if line_num == 1 else prosses_line(words, line_num)
+
                 print(words)
 
     except FileNotFoundError as e:
