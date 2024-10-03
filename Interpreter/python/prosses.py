@@ -1,7 +1,8 @@
-from typing import List, Union
+from typing import List, Union, Dict
 
 import globalvars as gv
 from globalvars import SError
+
 
 def SetWord(word) -> str:
     SError(f"\n1.  | \n     /\\ expected a word to set as a main word").raise_(
@@ -11,37 +12,76 @@ def SetWord(word) -> str:
     return word
 
 start: List[Union[str|int]] = []
-
-varrs_: dict[int, List[Union[str|int]]] = {}
+Unicode: list[int] = []
+varrs_: Dict[int, List[Union[str, int, List[int]]] ] = {}
 
 def check_start(word_count: int, line_num: int):
-    global start
     
-    if len(start) == 0:
-        if word_count == 3:
-            start.append(line_num)
+    def int_():
+        global start
+        
+        if len(start) == 0:
+            if word_count == 3:
+                start.append(line_num)
 
-    if len(start) >= 1:
-        if start[0] == line_num - 1:
-            if word_count == 41:           # 41 type int
-                start.append("int")
+        if len(start) >= 1:
+            if start[0] == line_num - 1:
+                if word_count == gv.Types["int"]:
+                    start.append("int")
 
-        if line_num - 2 == start[0]:
-            if start[1] == "int":
-                start.append(word_count)       # used to add the int var to the list
+            if line_num - 2 == start[0]:
+                if start[1] == "int":
+                    start.append(word_count)       # used to add the int var to the list
 
-        if len(start) >= 3:
-            if start[1] and start[2] and not len(start) == 4 and line_num - 3 == start[0]:
-                if word_count >= 60 and start[1] == 'int':
-                    start.append(word_count)
+            if len(start) >= 3:
+                if start[1] and start[2] and not len(start) == 4 and line_num - 3 == start[0]:
+                    if word_count >= 60 and start[1] == 'int':
+                        start.append(word_count)
 
-                    varrs_[word_count] = [start[1], start[2]]
-                    start = []
+                        varrs_[word_count] = [start[1], start[2]]
+                        start = []
 
-                else:
-                    SError(f'\n At line {line_num}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
-                    ).raise_() and gv.change('Error', True)
+                    else:
+                        SError(f'\n At line {line_num}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
+                        ).raise_() and gv.change('Error', True)
 
+    def Unicode_():
+        global start
+        global Unicode
+        
+        if len(start) == 0:
+            if word_count == 3:
+                start.append(line_num)
+
+        if len(start) > 0:
+            if start[0] == line_num - 1:
+                if word_count == gv.Types["Unicode"]:
+                    start.append("Unicode")
+
+            if len(start) >= 2:
+                if start[1] == "Unicode":
+                    if len(start) == 3:
+                        print(start)
+                        if start[2] == line_num - 1:
+
+                            if word_count >= 60:
+                                start.append(word_count)
+
+                                varrs_[word_count] = [start[1], Unicode]
+                                start = []
+                                Unicode = []
+                            else:
+                                SError(f'\n At line {line_num}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
+                                ).raise_() and gv.change('Error', True)
+
+                    if word_count > 1_114_111:
+                        start.append(line_num)
+                        
+                    elif len(start) == 2:
+                        Unicode.append(word_count)
+
+    int_()
+    Unicode_()
 
 out: List[Union[str|int]] = []
 def check_out(word_count: int, line_num: int):
@@ -53,9 +93,10 @@ def check_out(word_count: int, line_num: int):
     if len(out) == 1:
         if out[0] == line_num - 1:
             print(f"{varrs_[word_count][0]}, {varrs_[word_count][1]}")
+            if varrs_[word_count][0] == 'Unicode':
+                # print(''.join(chr(code) for code in varrs_[word_count][1]))
+                ...
             out = []
-
-
 
 
 

@@ -4,12 +4,17 @@ Version: int = 0
 Error: bool = False
 LineNum: int = 0
 
+Types: dict[str, int] = {
+    "Unicode": 42,
+    "int": 41
+}
+
 class sErrorHelper(Exception):
     ...
 
 class SError:
     global LineNum
-    
+
     def __init__(self, txt):
         self.txt = txt
     

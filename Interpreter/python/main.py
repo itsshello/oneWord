@@ -32,6 +32,7 @@ def read_file(filename):
                 prosses_line(words, line_num) if line_num == 1 else prosses_line(words, line_num)
                 if Error:
                     break
+                print(words)
 
     except FileNotFoundError as e:
         print("File Not Found")
