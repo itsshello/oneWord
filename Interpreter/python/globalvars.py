@@ -1,9 +1,23 @@
 word: str = ""
 IgnoreSpaces: bool = False
 Version: int = 0
+Error: bool = False
+
+class sErrorHelper(Exception):
+    ...
+
+class SError:
+    def __init__(self, txt):
+        self.txt = txt
+    
+    def raise_(self):
+        raise sErrorHelper(self.txt)
 
 def change(valueToChange: str, value):
-    global word, IgnoreSpaces, Version
+    global word
+    global IgnoreSpaces
+    global Version
+    global Error
 
     if valueToChange == 'word':
         word = value
@@ -11,6 +25,8 @@ def change(valueToChange: str, value):
         IgnoreSpaces = value
     elif valueToChange == 'Version':
         Version = value
+    elif valueToChange == 'Error':
+        Error = value
     else:
         print(f"No variable named '{valueToChange}'")
 

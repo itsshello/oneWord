@@ -1,3 +1,4 @@
 .mypy_cache
 mypy.ini
 plan.txt
+__pycache__
