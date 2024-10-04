@@ -25,6 +25,8 @@ def read_file(filename):
             word = SetWord(Lines[0])
 
             for line in Lines:
+                if line == "":
+                    continue
                 line_num += 1
                 if line_num == 1:
                     continue
@@ -32,7 +34,7 @@ def read_file(filename):
                 prosses_line(words, line_num) if line_num == 1 else prosses_line(words, line_num)
                 if Error:
                     break
-                print(words)
+                # print(words)
 
     except FileNotFoundError as e:
         print("File Not Found")
