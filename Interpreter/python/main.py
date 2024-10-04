@@ -19,7 +19,7 @@ def words_inSentence(text, word) -> int :
 def read_file(filename):
     try:
         with open(filename, 'r') as file:
-            line_num: int = 0  # 1 because the 1st line will be checked not in the loop 
+            line_num: int = 0 
             Text = file.read()
             Lines = Text.split('\n')
             word = SetWord(Lines[0])
@@ -34,7 +34,7 @@ def read_file(filename):
                 prosses_line(words, line_num) if line_num == 1 else prosses_line(words, line_num)
                 if Error:
                     break
-                # print(words)
+                print(words)
 
     except FileNotFoundError as e:
         print("File Not Found")
