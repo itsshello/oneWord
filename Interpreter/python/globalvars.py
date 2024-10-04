@@ -1,12 +1,16 @@
+from typing import Any
+
 word: str = ""
 IgnoreSpaces: bool = False
 Version: int = 0
 Error: bool = False
 LineNum: int = 0
+DevMode: bool = True
 
 Types: dict[str, int] = {
+    "int": 41,
     "Unicode": 42,
-    "int": 41
+    "ASCII": 43
 }
 
 class sErrorHelper(Exception):
@@ -20,6 +24,9 @@ class SError:
     
     def raise_(self):
         raise sErrorHelper(self.txt + 'from Line :' + LineNum)
+
+def removeType(var) -> Any:
+    return var
 
 def change(valueToChange: str, value):
     global word

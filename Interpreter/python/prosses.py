@@ -13,7 +13,8 @@ def SetWord(word) -> str:
 
 start: List[Union[str|int]] = []
 Unicode: list[int] = []
-varrs_: Dict[int, List[Union[str, int, List[int]]] ] = {}
+ASCII_: list[int] = []
+varrs_: Dict[int, List[Union[str, int | List[int]]] ] = {}
 
 def check_start(word_count: int, line_num: int):
     
@@ -74,14 +75,52 @@ def check_start(word_count: int, line_num: int):
                                 SError(f'\n At line {line_num}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
                                 ).raise_() and gv.change('Error', True)
 
-                    if word_count > 1_114_111:
+                    if word_count > 1_114_111 or word_count == 1:
                         start.append(line_num)
                         
-                    elif len(start) == 2:
-                        Unicode.append(word_count)
+                    elif len(start) == 2: 
+                        if not start[0] == line_num - 1:
+                            Unicode.append(word_count)
+
+    def ASCII__():
+        global start
+        global ASCII_
+        
+        if len(start) == 0:
+            if word_count == 3:
+                start.append(line_num)
+
+        if len(start) > 0:
+            if start[0] == line_num - 1:
+                if word_count == gv.Types["ASCII"]:
+                    start.append("ASCII")
+
+            if len(start) >= 2:
+                if start[1] == "ASCII":
+                    if len(start) == 3:
+                        print(start)
+                        if start[2] == line_num - 1:
+
+                            if word_count >= 60:
+                                start.append(word_count)
+
+                                varrs_[word_count] = [start[1], ASCII_]
+                                start = []
+                                ASCII_ = []
+                            else:
+                                SError(f'\n At line {line_num}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
+                                ).raise_() and gv.change('Error', True)
+
+                    if word_count > 127 or word_count == 1:
+                        start.append(line_num)
+                        
+                    elif len(start) == 2: 
+                        if not start[0] == line_num - 1:
+                            ASCII_.append(word_count)
 
     int_()
     Unicode_()
+    ASCII__()
 
 out: List[Union[str|int]] = []
 def check_out(word_count: int, line_num: int):
@@ -94,8 +133,13 @@ def check_out(word_count: int, line_num: int):
         if out[0] == line_num - 1:
             print(f"{varrs_[word_count][0]}, {varrs_[word_count][1]}")
             if varrs_[word_count][0] == 'Unicode':
-                # print(''.join(chr(code) for code in varrs_[word_count][1]))
-                ...
+                unicode_list: list[int] = gv.removeType(varrs_[word_count][1])
+                print(''.join(chr(code) for code in unicode_list))
+            
+            if varrs_[word_count][0] == 'ASCII':
+                ascii_codes: list[int] = gv.removeType(varrs_[word_count][1])
+                print(''.join(chr(code) for code in ascii_codes if 0 <= code <= 127))
+
             out = []
 
 
