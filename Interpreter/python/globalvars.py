@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 
 word: str = ""
 IgnoreSpaces: bool = False
@@ -12,6 +12,11 @@ Types: dict[str, int] = {
     "Unicode": 42,
     "ASCII": 43
 }
+Prosses: dict[str, int] = {
+    "Start": 3,
+    "Output": 4,
+    "Input": 5
+}
 
 class sErrorHelper(Exception):
     ...
@@ -23,7 +28,7 @@ class SError:
         self.txt = txt
     
     def raise_(self):
-        raise sErrorHelper(self.txt + 'from Line :' + LineNum)
+        raise sErrorHelper("\n\n" + self.txt + '\nfrom Line : ' + str(LineNum))
 
 def removeType(var) -> Any:
     return var

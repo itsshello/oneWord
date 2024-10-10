@@ -22,15 +22,15 @@ def check_start(word_count: int, line_num: int):
         global start
         
         if len(start) == 0:
-            if word_count == 3:
+            if word_count == gv.Prosses["Start"]:
                 start.append(line_num)
 
-        if len(start) >= 1:
+        elif len(start) >= 1:
             if start[0] == line_num - 1:
                 if word_count == gv.Types["int"]:
                     start.append("int")
 
-            if line_num - 2 == start[0]:
+            if line_num - 2 == start[0] and len(start) >= 2:
                 if start[1] == "int":
                     start.append(word_count)       # used to add the int var to the list
 
@@ -43,7 +43,7 @@ def check_start(word_count: int, line_num: int):
                         start = []
 
                     else:
-                        SError(f'\n At line {line_num}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
+                        SError(f'\n At line {gv.LineNum}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
                         ).raise_() and gv.change('Error', True)
 
     def Unicode_():
@@ -51,7 +51,7 @@ def check_start(word_count: int, line_num: int):
         global Unicode
         
         if len(start) == 0:
-            if word_count == 3:
+            if word_count == gv.Prosses["Start"]:
                 start.append(line_num)
 
         if len(start) > 0:
@@ -72,7 +72,7 @@ def check_start(word_count: int, line_num: int):
                                 start = []
                                 Unicode = []
                             else:
-                                SError(f'\n At line {line_num}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
+                                SError(f'\n At line {gv.LineNum}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
                                 ).raise_() and gv.change('Error', True)
 
                     if word_count > 1_114_111 or word_count == 1:
@@ -87,12 +87,12 @@ def check_start(word_count: int, line_num: int):
         global ASCII_
         
         if len(start) == 0:
-            if word_count == 3:
+            if word_count == gv.Prosses['Start']:
                 start.append(line_num)
 
         if len(start) > 0:
             if start[0] == line_num - 1:
-                if word_count == gv.Types["ASCII"]:
+                if word_count == gv.Types['ASCII']:
                     start.append("ASCII")
 
             if len(start) >= 2:
@@ -108,7 +108,7 @@ def check_start(word_count: int, line_num: int):
                                 start = []
                                 ASCII_ = []
                             else:
-                                SError(f'\n At line {line_num}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
+                                SError(f'\n At line {gv.LineNum}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
                                 ).raise_() and gv.change('Error', True)
 
                     if word_count > 127 or word_count == 1:
@@ -127,7 +127,7 @@ def check_out(word_count: int, line_num: int):
     global out
     
     if len(out) == 0:
-        if word_count == 4:
+        if word_count == gv.Prosses["Output"]:
             out.append(line_num)
     if len(out) == 1:
         if out[0] == line_num - 1:
@@ -142,10 +142,59 @@ def check_out(word_count: int, line_num: int):
 
             out = []
 
+input_: List[Union[str|int]] = []
+def check_in(word_count: int, line_num: int):
+    global input_
 
+    def ASCII_(i):
+        try:
+            print("here")
+            i.encode('ascii')
+            ascii_values = [ord(char) for char in i]
+            return ascii_values
+        except UnicodeEncodeError:
+            SError("Error: The input contains non-ASCII (Unicode) characters.").raise_()
+            gv.change('Error', True)
+
+    def Unicode_(i):
+        try:
+            utf8_values = [ord(char) for char in i]
+            return utf8_values
+        except Exception as e:
+            SError(e).raise_()
+            gv.change('Error', True)
+
+    def int_(i):
+        try:
+            return int(i)
+        except ValueError as e:
+            SError("Input Type Expected a Int").raise_()
+            gv.change('Error', True)
+
+    if len(input_) == 0:
+        if word_count == gv.Prosses["Input"]:
+            input_.append(line_num)
+    
+    elif len(input_) == 1:
+        input_.append('ASCII') if word_count == gv.Types['ASCII'] else ...
+        input_.append('Unicode') if word_count == gv.Types['Unicode'] else ...
+        input_.append('int') if word_count == gv.Types['int'] else ...
+        ...
+       
+    elif len(input_) == 2:
+        i: str = input()
+        input_.append(ASCII_(i)) if input_[1] == 'ASCII' else ...
+        input_.append(Unicode_(i)) if input_[1] == 'Unicode' else ...
+        input_.append(int_(i)) if input_[1] == 'int' else ...
+
+        if word_count >= 60:
+            varrs_[word_count] = [input_[1], input_[2]]
+            input_ = []
+        else:
+            SError(f'\n At line {gv.LineNum}, expected variable above \n {gv.word + " " * 60} \n [60+] or higher'
+            ).raise_() and gv.change('Error', True)
 
 def prosses_line(word_count: int, line_num: int) -> None:
-    gv.change('LineNum', line_num)
     """Line 2 to 3"""
     if line_num <= 3:
         gv.change('IgnoreSpaces', True if word_count == 2 else False) if line_num == 2 and word_count > 1 else SError(f"\
@@ -156,14 +205,10 @@ def prosses_line(word_count: int, line_num: int) -> None:
         gv.change('Version', word_count) if line_num == 3 else ...
         return
 
+    if word_count == 0:
+        return
+
     """___main___"""
     check_start(word_count, line_num)
     check_out(word_count, line_num)
-
-
-
-    
-
-    
-    
-    
+    check_in(word_count, line_num)

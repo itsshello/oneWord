@@ -3,3 +3,4 @@ mypy.ini
 plan.txt
 __pycache__
 temp.py
+test.*
