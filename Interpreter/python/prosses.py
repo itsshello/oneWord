@@ -148,7 +148,6 @@ def check_in(word_count: int, line_num: int):
 
     def ASCII_(i):
         try:
-            print("here")
             i.encode('ascii')
             ascii_values = [ord(char) for char in i]
             return ascii_values
